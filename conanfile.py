@@ -11,6 +11,7 @@ class CurlCppConan(ConanFile):
     settings = "os", "arch", "compiler", "build_type"
     options = {}
     default_options = []
+    requires = "libcurl/7.52.1@eliaskousk/stable"
     url="http://github.com/eliaskousk/conan-curl-cpp"
     license="https://opensource.org/licenses/MIT"
     exports= "CMakeLists.txt", "change_dylib_names.sh"
