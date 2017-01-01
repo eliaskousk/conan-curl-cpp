@@ -9,8 +9,8 @@ class CurlCppConan(ConanFile):
     version = "latest"
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
-    options = {}
-    default_options = []
+    options = {"shared": [True, False]}
+    default_options = "shared=True"
     requires = "libcurl/7.52.1@eliaskousk/stable"
     url="http://github.com/eliaskousk/conan-curl-cpp"
     license="https://opensource.org/licenses/MIT"
