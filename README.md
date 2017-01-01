@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/eliaskousk/conan-curl-cpp.svg?branch=release/latest)](https://travis-ci.org/eliaskousk/conan-curl-cpp)
+
 # conan-curl-cpp
 
 [Conan.io](https://conan.io) package for CURL C++ Client library
