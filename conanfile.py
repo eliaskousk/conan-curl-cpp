@@ -2,6 +2,7 @@ from conans import ConanFile
 import os
 from conans.tools import download
 from conans.tools import unzip
+from conans.tools import replace_in_file
 from conans import CMake
 
 class CurlCppConan(ConanFile):
@@ -14,7 +15,7 @@ class CurlCppConan(ConanFile):
     requires = "libcurl/7.52.1@eliaskousk/stable"
     url="http://github.com/eliaskousk/conan-curl-cpp"
     license="https://opensource.org/licenses/MIT"
-    exports= "CMakeLists.txt", "change_dylib_names.sh"
+    exports= "CMakeLists.txt", "cmake/detect.cpp11.cmake", "change_dylib_names.sh"
     folder_name = "curl-cpp-%s" % version
 
     def source(self):
@@ -22,6 +23,7 @@ class CurlCppConan(ConanFile):
         self.run("cd %s && git checkout master" % self.folder_name)
 
     def build(self):
+
         cmake = CMake(self.settings)
         if self.settings.os == "Windows":
             self.run("IF not exist _build mkdir _build")
@@ -29,6 +31,20 @@ class CurlCppConan(ConanFile):
             self.run("mkdir _build")
         cd_build = "cd _build"
         shared = "-DBUILD_SHARED_LIBS=1" if self.options.shared else ""
+
+        # Detect c++11 instead of forcing it.
+        # Will fail gracefully if unsupported.
+        text_to_replace = '''if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+        endif()
+
+        if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+        endif()
+        '''
+        replaced_text = 'include("../../cmake/detect.cpp11.cmake")'
+        replace_in_file(os.path.join(self.folder_name, "src", "CMakeLists.txt"), text_to_replace, replaced_text)
+
         self.run("%s && cmake .. %s %s" % (cd_build, cmake.command_line, shared))
         self.run("%s && cmake --build . %s" % (cd_build, cmake.build_config))
 
