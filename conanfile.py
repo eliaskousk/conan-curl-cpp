@@ -35,13 +35,13 @@ class CurlCppConan(ConanFile):
         # Detect c++11 instead of forcing it.
         # Will fail gracefully if unsupported.
         text_to_replace = '''if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-        endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
 
-        if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-        endif()
-        '''
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+endif()
+'''
         replaced_text = 'include("../../cmake/detect.cpp11.cmake")'
         replace_in_file(os.path.join(self.folder_name, "src", "CMakeLists.txt"), text_to_replace, replaced_text)
 
