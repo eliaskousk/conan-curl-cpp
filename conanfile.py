@@ -10,8 +10,8 @@ class CurlCppConan(ConanFile):
     version = "latest"
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
-    options = {"shared": [True, False]}
-    default_options = "shared=False"
+    options = {"shared": [True, False], "fpic": [True, False]}
+    default_options = "shared=False", "fpic=True"
     requires = "libcurl/7.52.1@eliaskousk/stable"
     url="http://github.com/eliaskousk/conan-curl-cpp"
     license="https://opensource.org/licenses/MIT"
@@ -31,6 +31,7 @@ class CurlCppConan(ConanFile):
             self.run("mkdir _build")
         cd_build = "cd _build"
         shared = "-DBUILD_SHARED_LIBS=1" if self.options.shared else ""
+        fpic = "-DCMAKE_POSITION_INDEPENDENT_CODE=TRUE" if self.options.fpic else ""
 
         # Detect c++11 instead of forcing it.
         # Will fail gracefully if unsupported.
@@ -45,7 +46,7 @@ endif()
         replaced_text = 'include("../../cmake/detect.cpp11.cmake")'
         replace_in_file(os.path.join(self.folder_name, "src", "CMakeLists.txt"), text_to_replace, replaced_text)
 
-        self.run("%s && cmake .. %s %s" % (cd_build, cmake.command_line, shared))
+        self.run("%s && cmake .. %s %s %s" % (cd_build, cmake.command_line, shared, fpic))
         self.run("%s && cmake --build . %s" % (cd_build, cmake.build_config))
 
     def package(self):
