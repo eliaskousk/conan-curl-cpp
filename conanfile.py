@@ -8,7 +8,7 @@ from conans import CMake
 
 class CurlCppConan(ConanFile):
     name = "curl-cpp"
-    version = "latest"
+    version = "1.0.0"
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {"shared": [True, False], "fpic": [True, False]}
@@ -24,7 +24,7 @@ class CurlCppConan(ConanFile):
 
     def source(self):
         self.run("git clone https://github.com/JosephP91/curlcpp.git %s" % self.folder_name)
-        self.run("cd %s && git checkout master" % self.folder_name)
+        self.run("cd %s && git checkout 1.0" % self.folder_name)
 
     def build(self):
 
