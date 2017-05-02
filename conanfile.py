@@ -19,7 +19,7 @@ class CurlCppConan(ConanFile):
     folder_name = "curl-cpp-%s" % version
 
     def config_options(self):
-        self.requires.add("libcurl/7.52.1@eliaskousk/stable", private=False)
+        self.requires.add("libcurl/7.54.0@eliaskousk/stable", private=False)
         self.options['libcurl'].shared = self.options.shared
 
     def source(self):
